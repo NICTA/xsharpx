@@ -17,15 +17,6 @@ using XSharpX;
 // ...
 ```
 
-## Contributing
-
-The XSharpX project is open to contributors. The project uses an open
-policy, similar to projects such as [Scalaz](https://github.com/scalaz)
-for Scala. Simply, if you have something interesting or useful to add,
-you're in. This policy has been highly successful in other OSS projects
-and duplicating it for XSharpX is a desired goal.
-
-
 ## Support and Community
 
  * [Google Group xsharpx](https://groups.google.com/forum/?fromgroups#!forum/xsharpx)
