@@ -77,6 +77,10 @@ namespace XSharpx {
       return IsEmpty ? o() : this;
     }
 
+    public Option<A> Append(Option<A> o, Semigroup<A> m) {
+      return m.Option.Op(this, o);
+    }
+
     public bool All(Func<A, bool> f) {
       return IsEmpty || f(a);
     }
@@ -97,6 +101,10 @@ namespace XSharpx {
 
     public Option<Option<B>> TraverseOption<B>(Func<A, Option<B>> f) {
       return IsEmpty ? Option<B>.Empty.Some() : f(a).Select(q => q.Some());
+    }
+
+    public Input<Option<B>> TraverseInput<B>(Func<A, Input<B>> f) {
+      return IsEmpty ? Option<B>.Empty.InputElement() : f(a).Select(q => q.Some());
     }
 
     public Either<X, Option<B>> TraverseEither<X, B>(Func<A, Either<X, B>> f) {

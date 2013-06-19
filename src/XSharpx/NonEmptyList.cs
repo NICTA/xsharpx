@@ -198,6 +198,10 @@ namespace XSharpx {
       return f(head).ZipWith<List<B>, NonEmptyList<B>>(tail.TraverseOption(f), h => t => h & t);
     }
 
+    public Input<NonEmptyList<B>> TraverseInput<B>(Func<A, Input<B>> f) {
+      return f(head).ZipWith<List<B>, NonEmptyList<B>>(tail.TraverseInput(f), h => t => h & t);
+    }
+
     public Either<X, NonEmptyList<B>> TraverseEither<X, B>(Func<A, Either<X, B>> f) {
       return f(head).ZipWith<List<B>, NonEmptyList<B>>(tail.TraverseEither(f), h => t => h & t);
     }

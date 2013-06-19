@@ -54,6 +54,13 @@ namespace XSharpx {
       }
     }
 
+    public Semigroup<Input<A>> Input {
+      get {
+        var t = this;
+        return new Semigroup<Input<A>>((i1, i2) => new Input<A>(t.Option.Option.Op(i1.val, i2.val)));
+      }
+    }
+
     public Semigroup<Func<B, A>> Pointwise<B>() {
       var t = this;
       return new Semigroup<Func<B, A>>((f1, f2) => b => t.op(f1(b), f2(b)));
