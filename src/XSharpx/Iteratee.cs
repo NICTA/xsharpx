@@ -116,6 +116,10 @@ namespace XSharpx {
       }
     }
 
+    public Option<Iteratee<E, A>> ApplyCont(Input<E> i) {
+      return ContT.Select(f => f(i));
+    }
+
     public static Iteratee<E, A> Done(A a, Input<E> i) {
       return new Iteratee<E, A>(Pair<A, Input<E>>.pair(a, i).Left<Pair<A, Input<E>>, Func<Input<E>, Iteratee<E, A>>>());
     }
