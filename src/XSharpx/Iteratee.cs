@@ -38,6 +38,14 @@ namespace XSharpx {
       return InputElement.ValueOr(f);
     }
 
+    public Input<E> OrElse(Func<Input<E>> i) {
+      return IsElement ? this : i();
+    }
+
+    public Input<E> Append(Input<E> o, Semigroup<E> m) {
+      return m.Input.Op(this, o);
+    }
+
     public Iteratee<E, A> Done<A>(A a) {
       return Iteratee<E, A>.Done(a, this);
     }

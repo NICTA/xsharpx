@@ -77,6 +77,10 @@ namespace XSharpx {
       return IsEmpty ? o() : this;
     }
 
+    public Option<A> Append(Option<A> o, Semigroup<A> m) {
+      return m.Option.Op(this, o);
+    }
+
     public bool All(Func<A, bool> f) {
       return IsEmpty || f(a);
     }
