@@ -113,6 +113,10 @@ namespace XSharpx {
       return Fold(a => a.Left<A, X>().Some(), b => f(b).Select(x => x.Right<A, X>()));
     }
 
+    public Input<Either<A, X>> TraverseInput<X>(Func<B, Input<X>> f) {
+      return Fold(a => a.Left<A, X>().InputElement(), b => f(b).Select(x => x.Right<A, X>()));
+    }
+
     public Either<W, Either<A, X>> TraverseEither<W, X>(Func<B, Either<W, X>> f) {
       return Fold(a => a.Left<A, X>().Right<W, Either<A, X>>(), b => f(b).Select(x => x.Right<A, X>()));
     }

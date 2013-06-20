@@ -88,6 +88,13 @@ namespace XSharpx {
       );
     }
 
+    public Input<Tree<B>> TraverseInput<B>(Func<A, Input<B>> f) {
+      return f(root).ZipWith<List<Tree<B>>, Tree<B>>(
+        children.TraverseInput(w => w.TraverseInput(f))
+      , b => bs => b.TreeNode(bs)
+      );
+    }
+
     public Either<X, Tree<B>> TraverseEither<X, B>(Func<A, Either<X, B>> f) {
       return f(root).ZipWith<List<Tree<B>>, Tree<B>>(
         children.TraverseEither(w => w.TraverseEither(f))

@@ -368,6 +368,13 @@ namespace XSharpx
       );
     }
 
+    public Input<List<B>> TraverseInput<B>(Func<A, Input<B>> f) {
+      return FoldRight<Input<List<B>>>(
+        (a, b) => f(a).ZipWith<List<B>, List<B>>(b, aa => bb => aa + bb)
+      , List<B>.Empty.InputElement()
+      );
+    }
+
     public Either<X, List<B>> TraverseEither<X, B>(Func<A, Either<X, B>> f) {
       return FoldRight<Either<X, List<B>>>(
         (a, b) => f(a).ZipWith<List<B>, List<B>>(b, aa => bb => aa + bb)

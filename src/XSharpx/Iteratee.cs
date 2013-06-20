@@ -108,6 +108,10 @@ namespace XSharpx {
       return val.TraverseOption(o => o.TraverseOption(f)).Select(o => new Input<B>(o));
     }
 
+    public Input<Input<B>> TraverseInput<B>(Func<E, Input<B>> f) {
+      return val.TraverseInput(o => o.TraverseInput(f)).Select(o => new Input<B>(o));
+    }
+
     public Either<X, Input<B>> TraverseEither<X, B>(Func<E, Either<X, B>> f) {
       return val.TraverseEither(o => o.TraverseEither(f)).Select(o => new Input<B>(o));
     }
@@ -162,6 +166,9 @@ namespace XSharpx {
       return o.SelectMany(z => z);
     }
 
+    public static Input<A> InputElement<A>(this A a) {
+      return Input<A>.Element(a);
+    }
   }
 
   public struct Iteratee<E, A> {

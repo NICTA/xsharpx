@@ -103,6 +103,10 @@ namespace XSharpx {
       return IsEmpty ? Option<B>.Empty.Some() : f(a).Select(q => q.Some());
     }
 
+    public Input<Option<B>> TraverseInput<B>(Func<A, Input<B>> f) {
+      return IsEmpty ? Option<B>.Empty.InputElement() : f(a).Select(q => q.Some());
+    }
+
     public Either<X, Option<B>> TraverseEither<X, B>(Func<A, Either<X, B>> f) {
       return IsEmpty ? Option<B>.Empty.Right<X, Option<B>>() : f(a).Select(q => q.Some());
     }

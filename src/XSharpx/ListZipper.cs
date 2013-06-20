@@ -277,6 +277,15 @@ namespace XSharpx {
         select new ListZipper<B>(ll, xx, rr);
     }
 
+    public Input<ListZipper<B>> TraverseInput<B>(Func<A, Input<B>> f) {
+      var t = this;
+      return
+        from ll in lefts.Reverse.TraverseInput(f)
+        from xx in f(t.focus)
+        from rr in t.rights.TraverseInput(f)
+        select new ListZipper<B>(ll, xx, rr);
+    }
+
     public Either<X, ListZipper<B>> TraverseEither<X, B>(Func<A, Either<X, B>> f) {
       var t = this;
       return
