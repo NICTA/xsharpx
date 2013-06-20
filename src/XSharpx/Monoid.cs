@@ -64,6 +64,12 @@ namespace XSharpx {
       }
     }
 
+    public Monoid<Input<A>> Input {
+      get {
+        return Semigroup.Input.Monoid(Input<A>.Empty());
+      }
+    }
+
     public Monoid<Func<B, A>> Pointwise<B>() {
       var t = this;
       return Semigroup.Pointwise<B>().Monoid(_ => t.id);
