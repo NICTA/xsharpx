@@ -38,7 +38,6 @@
     <Compile Include="src\XSharpx\ListBuffer.cs" />
     <Compile Include="src\XSharpx\List.cs" />
     <Compile Include="src\XSharpx\FuncExtension.cs" />
-    <Compile Include="src\XSharpx\ReaderOption.cs" />
     <Compile Include="src\XSharpx\Semigroup.cs" />
     <Compile Include="src\XSharpx\Monoid.cs" />
     <Compile Include="src\XSharpx\Reducer.cs" />
@@ -49,6 +48,7 @@
     <Compile Include="src\XSharpx\Tree.cs" />
     <Compile Include="src\XSharpx\Unit.cs" />
     <Compile Include="src\XSharpx\Iteratee.cs" />
+    <Compile Include="src\XSharpx\Possible.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

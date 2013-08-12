@@ -3,12 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XSharpx", "XSharpx.csproj", "{A6645649-6388-4A53-9D81-C99ABC23A1A1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XSharpx.Examples", "XSharpx.Examples\XSharpx.Examples\XSharpx.Examples.csproj", "{9440EBE4-A166-4CDE-8A40-61AA1C32337C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9440EBE4-A166-4CDE-8A40-61AA1C32337C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9440EBE4-A166-4CDE-8A40-61AA1C32337C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9440EBE4-A166-4CDE-8A40-61AA1C32337C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9440EBE4-A166-4CDE-8A40-61AA1C32337C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A6645649-6388-4A53-9D81-C99ABC23A1A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A6645649-6388-4A53-9D81-C99ABC23A1A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6645649-6388-4A53-9D81-C99ABC23A1A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
