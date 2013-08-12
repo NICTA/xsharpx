@@ -46,6 +46,7 @@
     <Compile Include="src\XSharpx\Store.cs" />
     <Compile Include="src\XSharpx\Either.cs" />
     <Compile Include="src\XSharpx\Tree.cs" />
+    <Compile Include="src\XSharpx\Unit.cs" />
     <Compile Include="src\XSharpx\Iteratee.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
