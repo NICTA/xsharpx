@@ -4,12 +4,12 @@ using XSharpx;
 
 namespace XSharpx.Examples
 {
-    public class PossibleExamples
+    public class AttemptExamples
     {
         [Test]
         public void Select()
         {
-            var r = new Possible<int, int>(IsEven)
+            var r = new Attempt<int, int>(IsEven)
                       .Select(x => x.ToString ());
 
             Assert.AreEqual(Option.Some("2"), r.Run(2));
@@ -18,7 +18,7 @@ namespace XSharpx.Examples
 
         [Test]
         public void SelectMany() {
-            var r = new Possible<int,int>(IsEven).SelectMany (i => new Possible<int, string>(DescribeIfSingleDigit));
+            var r = new Attempt<int,int>(IsEven).SelectMany (i => new Attempt<int, string>(DescribeIfSingleDigit));
             Assert.AreEqual(Option.Some("two"), r.Run (2));
             Assert.IsEmpty (r.Run (3));
             Assert.IsEmpty (r.Run (12));
@@ -27,8 +27,8 @@ namespace XSharpx.Examples
         [Test]
         public void SelectManyLinq() {
             var r =
-                from a in new Possible<int, int>(IsEven)
-                from b in new Possible<int, string>(DescribeIfSingleDigit)
+                from a in new Attempt<int, int>(IsEven)
+                from b in new Attempt<int, string>(DescribeIfSingleDigit)
                 select b;
 
             Assert.AreEqual(Option.Some("two"), r.Run (2));
