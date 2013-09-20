@@ -304,32 +304,32 @@ namespace XSharpx {
       return Iteratee<A, Option<A>>.Cont(step);
     }
 
-    public static Iteratee<A, Void> Drop<A>(int n) {
-      Iteratee<A, Void> eof = Iteratee<A, Void>.Done(default(Void), Input<A>.Eof());
-      Iteratee<A, Void> empty = Iteratee<A, Void>.Done(default(Void), Input<A>.Empty());
-      Func<Input<A>, Iteratee<A, Void>> step =
-        i => i.Fold<Iteratee<A, Void>>(
-          () => Iteratee<A, Void>.Cont(step)
+    public static Iteratee<A, Unit> Drop<A>(int n) {
+      Iteratee<A, Unit> eof = Iteratee<A, Unit>.Done(default(Unit), Input<A>.Eof());
+      Iteratee<A, Unit> empty = Iteratee<A, Unit>.Done(default(Unit), Input<A>.Empty());
+      Func<Input<A>, Iteratee<A, Unit>> step =
+        i => i.Fold<Iteratee<A, Unit>>(
+          () => Iteratee<A, Unit>.Cont(step)
         , () => eof
         , _ => Drop<A>(n - 1)
         );
 
       return n == 0 ?
         empty :
-        Iteratee<A, Void>.Cont(step);
+        Iteratee<A, Unit>.Cont(step);
     }
 
-    public static Iteratee<A, Void> DropWhile<A>(Func<A, bool> p) {
-      Func<Input<A>, Iteratee<A, Void>> v = i => Iteratee<A, Void>.Done(default(Void), i);
+    public static Iteratee<A, Unit> DropWhile<A>(Func<A, bool> p) {
+      Func<Input<A>, Iteratee<A, Unit>> v = i => Iteratee<A, Unit>.Done(default(Unit), i);
       var eof = v(Input<A>.Eof());
-      Func<Input<A>, Iteratee<A, Void>> step =
-        i => i.Fold<Iteratee<A, Void>>(
-          () => Iteratee<A, Void>.Cont(step)
+      Func<Input<A>, Iteratee<A, Unit>> step =
+        i => i.Fold<Iteratee<A, Unit>>(
+          () => Iteratee<A, Unit>.Cont(step)
         , () => eof
         , e => p(e) ? DropWhile(p) : v(i)
         );
 
-      return Iteratee<A, Void>.Cont(step);
+      return Iteratee<A, Unit>.Cont(step);
     }
 
     public static Iteratee<E, A> Fold<E, A>(Func<A, E, A> f, A z) {
