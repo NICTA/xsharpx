@@ -88,6 +88,13 @@ namespace XSharpx {
       );
     }
 
+    public Terminal<Tree<B>> TraverseTerminal<B>(Func<A, Terminal<B>> f) {
+      return f(root).ZipWith<List<Tree<B>>, Tree<B>>(
+        children.TraverseTerminal(w => w.TraverseTerminal(f))
+      , b => bs => b.TreeNode(bs)
+      );
+    }
+
     public Input<Tree<B>> TraverseInput<B>(Func<A, Input<B>> f) {
       return f(root).ZipWith<List<Tree<B>>, Tree<B>>(
         children.TraverseInput(w => w.TraverseInput(f))

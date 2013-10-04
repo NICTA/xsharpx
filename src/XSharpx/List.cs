@@ -368,6 +368,13 @@ namespace XSharpx
       );
     }
 
+    public Terminal<List<B>> TraverseTerminal<B>(Func<A, Terminal<B>> f) {
+      return FoldRight<Terminal<List<B>>>(
+        (a, b) => f(a).ZipWith<List<B>, List<B>>(b, aa => bb => aa + bb)
+      , List<B>.Empty.TerminalValue()
+      );
+    }
+
     public Input<List<B>> TraverseInput<B>(Func<A, Input<B>> f) {
       return FoldRight<Input<List<B>>>(
         (a, b) => f(a).ZipWith<List<B>, List<B>>(b, aa => bb => aa + bb)

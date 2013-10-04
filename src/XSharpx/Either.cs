@@ -113,6 +113,10 @@ namespace XSharpx {
       return Fold(a => a.Left<A, X>().Some(), b => f(b).Select(x => x.Right<A, X>()));
     }
 
+    public Terminal<Either<A, X>> TraverseTerminal<X>(Func<B, Terminal<X>> f) {
+      return Fold(a => a.Left<A, X>().TerminalValue(), b => f(b).Select(x => x.Right<A, X>()));
+    }
+
     public Input<Either<A, X>> TraverseInput<X>(Func<B, Input<X>> f) {
       return Fold(a => a.Left<A, X>().InputElement(), b => f(b).Select(x => x.Right<A, X>()));
     }

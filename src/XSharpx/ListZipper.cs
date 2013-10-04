@@ -277,6 +277,15 @@ namespace XSharpx {
         select new ListZipper<B>(ll, xx, rr);
     }
 
+    public Terminal<ListZipper<B>> TraverseTerminal<B>(Func<A, Terminal<B>> f) {
+      var t = this;
+      return
+        from ll in lefts.Reverse.TraverseTerminal(f)
+        from xx in f(t.focus)
+        from rr in t.rights.TraverseTerminal(f)
+        select new ListZipper<B>(ll, xx, rr);
+    }
+
     public Input<ListZipper<B>> TraverseInput<B>(Func<A, Input<B>> f) {
       var t = this;
       return

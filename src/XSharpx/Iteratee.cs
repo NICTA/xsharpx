@@ -112,6 +112,10 @@ namespace XSharpx {
       return val.TraverseOption(o => o.TraverseOption(f)).Select(o => new Input<B>(o));
     }
 
+    public Terminal<Input<B>> TraverseTerminal<B>(Func<E, Terminal<B>> f) {
+      return val.TraverseTerminal(o => o.TraverseTerminal(f)).Select(o => new Input<B>(o));
+    }
+
     public Input<Input<B>> TraverseInput<B>(Func<E, Input<B>> f) {
       return val.TraverseInput(o => o.TraverseInput(f)).Select(o => new Input<B>(o));
     }

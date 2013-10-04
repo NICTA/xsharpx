@@ -103,6 +103,10 @@ namespace XSharpx {
       return IsEmpty ? Option<B>.Empty.Some() : f(a).Select(q => q.Some());
     }
 
+    public Terminal<Option<B>> TraverseTerminal<B>(Func<A, Terminal<B>> f) {
+      return IsEmpty ? Option<B>.Empty.TerminalValue() : f(a).Select(q => q.Some());
+    }
+
     public Input<Option<B>> TraverseInput<B>(Func<A, Input<B>> f) {
       return IsEmpty ? Option<B>.Empty.InputElement() : f(a).Select(q => q.Some());
     }
