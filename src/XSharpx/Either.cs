@@ -54,17 +54,17 @@ namespace XSharpx {
       return IsLeft ? o() : this;
     }
 
-    public bool All(Func<A, bool> f) {
-      return IsLeft || f(a);
+    public bool All(Func<B, bool> f) {
+      return IsLeft || f(b);
     }
 
-    public bool Any(Func<A, bool> f) {
-      return IsRight && f(a);
+    public bool Any(Func<B, bool> f) {
+      return IsRight && f(b);
     }
 
-    public List<A> ToList {
+    public List<B> ToList {
       get {
-        return IsLeft ? List<A>.Empty : a.ListValue();
+        return IsLeft ? List<B>.Empty : b.ListValue();
       }
     }
 
