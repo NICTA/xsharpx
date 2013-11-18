@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace XSharpx {
+    
   public struct Input<E> : IEnumerable<E> {
     internal readonly Option<Option<E>> val;
 
@@ -286,8 +287,11 @@ namespace XSharpx {
 
   public static class Iteratee {
 
+     
+
     public static Iteratee<A, Option<A>> Head<A>() {
-      Func<Input<A>, Iteratee<A, Option<A>>> step =
+        Func<Input<A>, Iteratee<A, Option<A>>> step = default(Func<Input<A>, Iteratee<A, Option<A>>>);
+        step = 
         i => i.Fold(
           () => Iteratee<A, Option<A>>.Cont(step)
         , () => Iteratee<A, Option<A>>.Done(Option.Empty, Input<A>.Eof())
@@ -298,8 +302,8 @@ namespace XSharpx {
     }
 
     public static Iteratee<A, Option<A>> Peek<A>() {
-      Func<Input<A>, Iteratee<A, Option<A>>> step =
-        i => i.Fold(
+        Func<Input<A>, Iteratee<A, Option<A>>> step = default(Func<Input<A>, Iteratee<A, Option<A>>>);
+        step = i => i.Fold(
           () => Iteratee<A, Option<A>>.Cont(step)
         , () => Iteratee<A, Option<A>>.Done(Option.Empty, Input<A>.Eof())
         , e => Iteratee<A, Option<A>>.Done(Option.Some(e), i)
@@ -311,7 +315,8 @@ namespace XSharpx {
     public static Iteratee<A, Unit> Drop<A>(int n) {
       Iteratee<A, Unit> eof = Iteratee<A, Unit>.Done(default(Unit), Input<A>.Eof());
       Iteratee<A, Unit> empty = Iteratee<A, Unit>.Done(default(Unit), Input<A>.Empty());
-      Func<Input<A>, Iteratee<A, Unit>> step =
+      Func<Input<A>, Iteratee<A, Unit>> step = default(Func<Input<A>, Iteratee<A, Unit>>);
+        step =
         i => i.Fold<Iteratee<A, Unit>>(
           () => Iteratee<A, Unit>.Cont(step)
         , () => eof
@@ -326,7 +331,8 @@ namespace XSharpx {
     public static Iteratee<A, Unit> DropWhile<A>(Func<A, bool> p) {
       Func<Input<A>, Iteratee<A, Unit>> v = i => Iteratee<A, Unit>.Done(default(Unit), i);
       var eof = v(Input<A>.Eof());
-      Func<Input<A>, Iteratee<A, Unit>> step =
+      Func<Input<A>, Iteratee<A, Unit>> step = default(Func<Input<A>, Iteratee<A, Unit>>);
+        step = 
         i => i.Fold<Iteratee<A, Unit>>(
           () => Iteratee<A, Unit>.Cont(step)
         , () => eof
@@ -337,8 +343,8 @@ namespace XSharpx {
     }
 
     public static Iteratee<E, A> Fold<E, A>(Func<A, E, A> f, A z) {
-      Func<A, Input<E>, Iteratee<E, A>> step =
-        (acc, i) => i.Fold<Iteratee<E, A>>(
+        Func<A, Input<E>, Iteratee<E, A>> step = default(Func<A, Input<E>, Iteratee<E, A>>);
+        step = (acc, i) => i.Fold<Iteratee<E, A>>(
           () => Iteratee<E, A>.Cont(j => step(acc, j))
         , () => Iteratee<E, A>.Done(acc, Input<E>.Eof())
         , e => Iteratee<E, A>.Cont(j => step(f(acc, e), j))

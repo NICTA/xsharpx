@@ -9,7 +9,7 @@ namespace XSharpx {
   ///  <typeparam name="A">The type of the potential left value.</typeparam>
   ///  <typeparam name="B">The type of the potential right value.</typeparam>
   /// <remarks>Either is often used to emulate checked exceptions.</remarks>
-  public struct Either<A, B> : IEnumerable<B> {
+  public class Either<A, B> : IEnumerable<B> {
     private readonly bool l;
     private readonly A a;
     private readonly B b;
