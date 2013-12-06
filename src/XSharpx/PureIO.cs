@@ -184,6 +184,13 @@ namespace PureIO {
       );
     }
 
+    /*
+      The monad for Terminal.
+
+      Note that `TerminalOperation#Select` is the only method that is specific to `TerminalOperation`.
+      More to the point, some other structure with a `Select` method could be
+      substituted here to give rise to a different kind of behaviour.
+    */
     public static Terminal<B> SelectMany<A, B>(this Terminal<A> t, Func<A, Terminal<B>> f) {
       return t.Fold<Terminal<B>>(
         f
@@ -230,6 +237,10 @@ namespace PureIO {
     }
   }
 
+  /*
+    A data structure with only one possible value.
+    It is similar to `void` but this can be used as a regular data type.
+  */
   public struct Unit {
     public static readonly Unit Value = new Unit();
   }
