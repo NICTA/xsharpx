@@ -10,6 +10,8 @@ namespace PureIO {
     - readLine, being a function from string to A
     - read, being a function from int to A
 
+    It gives rise to a functor. See `Select` method.
+
     The Fold function deconstructs the data type into its one of 4 possibilities.
     The 4 static functions construct into one of the possibilities.
   */
@@ -21,23 +23,9 @@ namespace PureIO {
     , Func<Func<int, A>, X> read
     );
 
-    /*
-      This data type is a functor.
-      This is all that is necessary to provide the grammar (Terminal).
-      Note that Terminal uses only this `Select` method to implement `SelectMany`
-    */
-    public TerminalOperation<B> Select<B>(Func<A, B> f) {
-      return Fold<TerminalOperation<B>>(
-        (s, a) => new TerminalOperation<B>.WriteOut(s, f(a))
-      , (s, a) => new TerminalOperation<B>.WriteErr(s, f(a))
-      , g => new TerminalOperation<B>.ReadLine(s => f(g(s)))
-      , g => new TerminalOperation<B>.Read(i => f(g(i)))
-      );
-    }
-
-    private class WriteOut : TerminalOperation<A> {
-      private string s;
-      private A a;
+    internal class WriteOut : TerminalOperation<A> {
+      private readonly string s;
+      private readonly A a;
 
       public WriteOut(string s, A a) {
         this.s = s;
@@ -58,9 +46,9 @@ namespace PureIO {
       return new WriteOut(s, a);
     }
 
-    private class WriteErr : TerminalOperation<A> {
-      private string s;
-      private A a;
+    internal class WriteErr : TerminalOperation<A> {
+      private readonly string s;
+      private readonly A a;
 
       public WriteErr(string s, A a) {
         this.s = s;
@@ -81,7 +69,7 @@ namespace PureIO {
       return new WriteErr(s, a);
     }
 
-    private class ReadLine : TerminalOperation<A> {
+    internal class ReadLine : TerminalOperation<A> {
       private Func<string, A> f;
 
       public ReadLine(Func<string, A> f) {
@@ -102,8 +90,8 @@ namespace PureIO {
       return new ReadLine(f);
     }
 
-    private class Read : TerminalOperation<A> {
-      private Func<int, A> f;
+    internal class Read : TerminalOperation<A> {
+      private readonly Func<int, A> f;
 
       public Read(Func<int, A> f) {
         this.f = f;
@@ -124,28 +112,30 @@ namespace PureIO {
     }
   }
 
+  public static class TerminalOperationFunctor {
+    public static TerminalOperation<B> Select<A, B>(this TerminalOperation<A> o, Func<A, B> f) {
+      /*
+        This data type is a functor.
+        This is all that is necessary to provide the grammar (Terminal).
+        Note that Terminal uses only this `Select` method to implement `SelectMany`
+      */
+      return o.Fold<TerminalOperation<B>>(
+        (s, a) => new TerminalOperation<B>.WriteOut(s, f(a))
+      , (s, a) => new TerminalOperation<B>.WriteErr(s, f(a))
+      , g => new TerminalOperation<B>.ReadLine(s => f(g(s)))
+      , g => new TerminalOperation<B>.Read(i => f(g(i)))
+      );
+    }
+  }
+
   public abstract class Terminal<A> {
     public abstract X Fold<X>(
       Func<A, X> done
     , Func<TerminalOperation<Terminal<A>>, X> more
     );
 
-    public Terminal<B> Select<B>(Func<A, B> f) {
-      return Fold<Terminal<B>>(
-        a => Terminal<B>.done(f(a))
-      , a => Terminal<B>.more(a.Select(t => t.Select(f)))
-      );
-    }
-
-    public Terminal<B> SelectMany<B>(Func<A, Terminal<B>> f) {
-      return Fold<Terminal<B>>(
-        f
-      , a => Terminal<B>.more(a.Select(t => t.SelectMany(f)))
-      );
-    }
-
-    private class Done : Terminal<A> {
-      public A a;
+    internal class Done : Terminal<A> {
+      public readonly A a;
 
       public Done(A a) {
         this.a = a;
@@ -163,8 +153,8 @@ namespace PureIO {
       return new Done(a);
     }
 
-    private class More : Terminal<A> {
-      public TerminalOperation<Terminal<A>> a;
+    internal class More : Terminal<A> {
+      public readonly TerminalOperation<Terminal<A>> a;
 
       public More(TerminalOperation<Terminal<A>> a) {
         this.a = a;
@@ -182,6 +172,31 @@ namespace PureIO {
       return new More(a);
     }
 
+
+    // public static TerminalWriteOut(string s)
+  }
+
+  public static class TerminalFunctor {
+    public static Terminal<B> Select<A, B>(this Terminal<A> t, Func<A, B> f) {
+      return t.Fold<Terminal<B>>(
+        a => Terminal<B>.done(f(a))
+      , a => Terminal<B>.more(a.Select(k => k.Select(f)))
+      );
+    }
+
+    public static Terminal<B> SelectMany<A, B>(this Terminal<A> t, Func<A, Terminal<B>> f) {
+      return t.Fold<Terminal<B>>(
+        f
+      , a => Terminal<B>.more(a.Select(k => k.SelectMany(f)))
+      );
+    }
+
+    public static Terminal<C> SelectMany<A, B, C>(this Terminal<A> t, Func<A, Terminal<B>> u, Func<A, B, C> f) {
+      return SelectMany(t, a => Select(u(a), b => f(a, b)));
+    }
+  }
+
+  public static class TerminalInterpreter {
     /*
       CAUTION: This function is unsafe.
       It is the "end of the (Terminal) world" interpreter.
@@ -190,7 +205,7 @@ namespace PureIO {
       Ideally, this function would be hypothetical and unavailable
       to the programmer API (i.e. implemented in its own runtime).
     */
-    public static A Interpret(Terminal<A> t) {
+    public static A Interpret<A>(this Terminal<A> t) {
       return t.Fold<A>(
         a => a
       , a => a.Fold<A>(
@@ -213,5 +228,9 @@ namespace PureIO {
         )
       );
     }
+  }
+
+  public struct Unit {
+    public static readonly Unit Value = new Unit();
   }
 }
