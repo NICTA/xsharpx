@@ -23,6 +23,12 @@ namespace PureIO {
     , Func<Func<int, A>, X> read
     );
 
+    public Terminal<A> Lift {
+      get {
+        return Terminal<A>.more(this.Select<A, Terminal<A>>(Terminal<A>.done));
+      }
+    }
+
     internal class WriteOut : TerminalOperation<A> {
       private readonly string s;
       private readonly A a;
@@ -40,10 +46,6 @@ namespace PureIO {
       ) {
         return writeOut(s, a);
       }
-    }
-
-    public static TerminalOperation<A> writeOut(string s, A a) {
-      return new WriteOut(s, a);
     }
 
     internal class WriteErr : TerminalOperation<A> {
@@ -65,10 +67,6 @@ namespace PureIO {
       }
     }
 
-    public static TerminalOperation<A> writeErr(string s, A a) {
-      return new WriteErr(s, a);
-    }
-
     internal class ReadLine : TerminalOperation<A> {
       private Func<string, A> f;
 
@@ -84,10 +82,6 @@ namespace PureIO {
       ) {
         return readLine(f);
       }
-    }
-
-    public static TerminalOperation<A> readLine(Func<string, A> f) {
-      return new ReadLine(f);
     }
 
     internal class Read : TerminalOperation<A> {
@@ -106,18 +100,15 @@ namespace PureIO {
         return read(f);
       }
     }
-
-    public static TerminalOperation<A> read(Func<int, A> f) {
-      return new Read(f);
-    }
   }
 
   public static class TerminalOperationFunctor {
     public static TerminalOperation<B> Select<A, B>(this TerminalOperation<A> o, Func<A, B> f) {
       /*
-        This data type is a functor.
-        This is all that is necessary to provide the grammar (Terminal).
-        Note that Terminal uses only this `Select` method to implement `SelectMany`
+        The `TerminalOperation` data type is a functor.
+        This is all that is necessary to provide the grammar (`Terminal`).
+        Note that `Terminal` uses only `Select`
+        (and no other `TerminalOperation` methods) to method to implement `SelectMany`
       */
       return o.Fold<TerminalOperation<B>>(
         (s, a) => new TerminalOperation<B>.WriteOut(s, f(a))
@@ -171,9 +162,32 @@ namespace PureIO {
     public static Terminal<A> more(TerminalOperation<Terminal<A>> a) {
       return new More(a);
     }
+  }
 
+  public static class Terminal {
+    public static Terminal<Unit> WriteOut(string s) {
+      return new TerminalOperation<Unit>.WriteOut(s, Unit.Value).Lift;
+    }
 
-    // public static TerminalWriteOut(string s)
+    public static Terminal<Unit> WriteErr(string s) {
+      return new TerminalOperation<Unit>.WriteErr(s, Unit.Value).Lift;
+    }
+
+    public static Terminal<string> ReadLine {
+      get {
+        return new TerminalOperation<string>.ReadLine(s => s).Lift;
+      }
+    }
+
+    public static Terminal<int> Read {
+      get {
+        return new TerminalOperation<int>.Read(i => i).Lift;
+      }
+    }
+
+    public static Terminal<Unit> WriteOut() {
+      return WriteOut("");
+    }
   }
 
   public static class TerminalFunctor {
@@ -244,4 +258,53 @@ namespace PureIO {
   public struct Unit {
     public static readonly Unit Value = new Unit();
   }
+
+  public class Previously {
+    static void WriteOut(string s) { Console.WriteLine(s); }
+    static void WriteOut() { WriteOut(""); }
+    static void WriteErr(string s) { Console.Error.WriteLine(s); }
+    static string ReadLine() { return Console.ReadLine(); }
+    static int Read() { return Console.Read(); }
+
+    public static int FormerlyMain() {
+      WriteOut("Hello, let us begin");
+      WriteOut("Please enter your name");
+      var name = ReadLine();
+      WriteOut("How old are you?");
+      var age = ReadLine();
+      WriteOut("Okey dokey, ready to tell the world?");
+      WriteOut("0. No");
+      WriteOut("1. Yes");
+      var r = Read();
+      WriteOut();
+      if(r == '0')
+        WriteErr(name + " is modest");
+      else
+        WriteOut(name + " is " + age + " years old");
+      return r - 48;
+    }
+  }
+
+  public class Demonstration {
+    public static int Main() {
+      Terminal<int> Program =
+        from _1    in Terminal.WriteOut("Hello, let us begin")
+        from _2    in Terminal.WriteOut("Please enter your name")
+        from name  in Terminal.ReadLine
+        from _3    in Terminal.WriteOut("How old are you?")
+        from age   in Terminal.ReadLine
+        from _4    in Terminal.WriteOut("Okey dokey, ready to tell the world?")
+        from _5    in Terminal.WriteOut("0. No")
+        from _6    in Terminal.WriteOut("1. Yes")
+        from r     in Terminal.Read
+        from _7    in Terminal.WriteOut()
+        from _8    in r == '0' ?
+                        Terminal.WriteErr(name + " is modest") :
+                        Terminal.WriteOut(name + " is " + age + " years old")
+        select r - 48;
+
+      return Program.Interpret();
+    }
+  }
+
 }
