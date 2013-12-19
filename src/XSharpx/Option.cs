@@ -16,23 +16,23 @@ namespace XSharpx {
   /// <typeparam name="A">The element type held by this homogenous structure.</typeparam>
   /// <remarks>This data type is also used in place of a nullable type.</remarks>
   public struct Option<A> : IEnumerable<A> {
-    private readonly bool e;
+    private readonly bool ne;
     private readonly A a;
 
     private Option(bool e, A a) {
-      this.e = e;
+      this.ne = !e;
       this.a = a;
     }
 
     public bool IsEmpty {
       get {
-        return e;
+        return !ne;
       }
     }
 
     public bool IsNotEmpty{
       get {
-        return !e;
+        return ne;
       }
     }
 
@@ -151,7 +151,7 @@ namespace XSharpx {
 
     private A Value {
       get {
-        if(e)
+        if(IsEmpty)
           throw new Exception("Value on empty Option");
         else
           return a;
@@ -159,7 +159,7 @@ namespace XSharpx {
     }
 
     private IEnumerable<A> Enumerate() {
-      if (!e) yield return a;
+      if (IsNotEmpty) yield return a;
     }
 
     public IEnumerator<A> GetEnumerator() {
