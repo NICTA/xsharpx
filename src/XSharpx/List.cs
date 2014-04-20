@@ -80,7 +80,7 @@ namespace XSharpx
     }
 
     public List<Pair<A, B>> Product<B>(List<B> o) {
-      return ZipWith<B, Pair<A, B>>(o, Pair<A, B>.pairF());
+      return ProductWith<B, Pair<A, B>>(o, Pair<A, B>.pairF());
     }
 
     public List<A> Append(List<A> x) {
@@ -95,6 +95,11 @@ namespace XSharpx
       return b.ToList;
     }
 
+    public DiffList<A> ToDiffList {
+      get {
+        return DiffList<A>.diffList(r => this * r);
+      }
+    }
     public NonEmptyList<A> Append(NonEmptyList<A> x) {
       return IsEmpty ? x : new NonEmptyList<A>(UnsafeHead, UnsafeTail).Append(x);
     }
