@@ -1,4 +1,5 @@
 /dist
+/obj
 /*.pidb
 /*.userprefs
-
+*.suo
