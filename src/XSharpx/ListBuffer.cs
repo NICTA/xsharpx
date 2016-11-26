@@ -61,9 +61,7 @@ namespace XSharpx
       }
     }
 
-    public static ListBuffer<A> Empty() {
-      return new ListBuffer<A>();
-    }
+    public static ListBuffer<A> Empty() => new ListBuffer<A>();
 
     private class ListBufferEnumerator : IEnumerator<A> {
       private bool z = true;
@@ -90,30 +88,18 @@ namespace XSharpx
         return !a.IsEmpty;
       }
 
-      A IEnumerator<A>.Current {
-        get {
-          return a.UnsafeHead;
-        }
-      }
+      A IEnumerator<A>.Current => a.UnsafeHead;
 
-      public object Current {
-        get {
-          return a.UnsafeHead;
-        }
-      }
+      public object Current => a.UnsafeHead;
+
     }
 
-    private ListBufferEnumerator Enumerate() {
-      return new ListBufferEnumerator(this);
-    }
+    private ListBufferEnumerator Enumerate() => new ListBufferEnumerator(this);
 
-    IEnumerator<A> IEnumerable<A>.GetEnumerator() {
-      return Enumerate();
-    }
+    IEnumerator<A> IEnumerable<A>.GetEnumerator() => Enumerate();
 
-    IEnumerator IEnumerable.GetEnumerator() {
-      return Enumerate();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => Enumerate();
+
   }
 }
 

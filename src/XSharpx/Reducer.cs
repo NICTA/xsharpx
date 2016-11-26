@@ -10,23 +10,11 @@ namespace XSharpx {
       this.unit = unit;
     }
 
-    public Semigroup<A> Semigroup {
-      get {
-        return Semigroup<A>.semigroup(op);
-      }
-    }
+    public Semigroup<A> Semigroup => Semigroup<A>.semigroup(op);
 
-    public Func<A, A, A> Op {
-      get {
-        return op;
-      }
-    }
+    public Func<A, A, A> Op => op;
 
-    public Func<Q, A> Unit {
-      get {
-        return unit;
-      }
-    }
+    public Func<Q, A> Unit => unit;
 
     public Func<A, Q, A> Snoc {
       get {
@@ -42,31 +30,15 @@ namespace XSharpx {
       }
     }
 
-    public A Apply(A a1, A a2) {
-      return Semigroup.Apply(a1, a2);
-    }
+    public A Apply(A a1, A a2) => Semigroup.Apply(a1, a2);
 
-    public Func<A, Func<A, A>> Curried {
-      get {
-        return Semigroup.Curried;
-      }
-    }
+    public Func<A, Func<A, A>> Curried => Semigroup.Curried;
 
-    public Func<A, A> Curried1(A a1) {
-      return Semigroup.Curried1(a1);
-    }
+    public Func<A, A> Curried1(A a1) => Semigroup.Curried1(a1);
 
-    public Reducer<Q, A> Dual {
-      get {
-        return Semigroup.Dual.Reducer(unit);
-      }
-    }
+    public Reducer<Q, A> Dual => Semigroup.Dual.Reducer(unit);
 
-    public Func<A, A> Join {
-      get {
-        return Semigroup.Join;
-      }
-    }
+    public Func<A, A> Join => Semigroup.Join;
 
     public Reducer<Q, Pair<A, B>> Pair<B>(Reducer<Q, B> s) {
       var t = this;
@@ -85,14 +57,10 @@ namespace XSharpx {
       return Semigroup.XSelect(f, g).Reducer<Q>(q => f(t.unit(q)));
     }
 
-    public static Reducer<Q, A> reducer(Func<A, A, A> op, Func<Q, A> unit) {
-      return new Reducer<Q, A>(op, unit);
-    }
+    public static Reducer<Q, A> reducer(Func<A, A, A> op, Func<Q, A> unit) =>
+      new Reducer<Q, A>(op, unit);
 
-    public static Reducer<A, List<A>> List {
-      get {
-        return Semigroup<A>.List.Reducer<A>(a => a.ListValue());
-      }
-    }
+    public static Reducer<A, List<A>> List => Semigroup<A>.List.Reducer<A>(a => a.ListValue());
+
   }
 }

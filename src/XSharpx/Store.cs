@@ -24,38 +24,20 @@ namespace XSharpx {
       }
     }
 
-    public Func<A, B> Set {
-      get {
-        return set;
-      }
-    }
+    public Func<A, B> Set => set;
 
-    public A Get {
-      get {
-        return get;
-      }
-    }
+    public A Get => get;
 
-    public Store<X, B> XSelect<X>(Func<A, X> f, Func<X, A> g) {
-      return new Store<X, B>(set.Compose(g), f(get));
-    }
+    public Store<X, B> XSelect<X>(Func<A, X> f, Func<X, A> g) => new Store<X, B>(set.Compose(g), f(get));
 
-    public Store<A, Store<A, B>> Duplicate {
-      get {
-        return Extend(q => q);
-      }
-    }
+    public Store<A, Store<A, B>> Duplicate => Extend(q => q);
 
     public Store<A, X> Extend<X>(Func<Store<A, B>, X> f) {
       var t = this;
       return new Store<A, X>(a => f(new Store<A, B>(t.set, a)), get);
     }
 
-    public B Extract {
-      get {
-        return set(get);
-      }
-    }
+    public B Extract => set(get);
 
     public Store<Pair<A, C>, Pair<B, D>> Product<C, D>(Store<C, D> s) {
       var t = this;
@@ -65,18 +47,15 @@ namespace XSharpx {
       );
     }
 
-    public B Modify(Func<A, A> f) {
-      return set(f(get));
-    }
+    public B Modify(Func<A, A> f) => set(f(get));
+
   }
 
   public static class StoreExtension {
-    public static Store<X, B> Select<X, A, B>(this Store<X, A> s, Func<A, B> f) {
-      return new Store<X, B>(f.Compose(s.Set), s.Get);
-    }
+    public static Store<X, B> Select<X, A, B>(this Store<X, A> s, Func<A, B> f) =>
+      new Store<X, B>(f.Compose(s.Set), s.Get);
 
-    public static Store<A, B> StoreSet<A, B>(this A a, Func<A, B> f) {
-      return new Store<A, B>(f, a);
-    }
+    public static Store<A, B> StoreSet<A, B>(this A a, Func<A, B> f) => new Store<A, B>(f, a);
+
   }
 }
