@@ -123,9 +123,8 @@ namespace XSharpx {
 
     public Either<Pair<A, Input<E>>, Func<Input<E>, Iteratee<E, A>>> ToEither => val;
 
-    public X Fold<X>(Func<A, Input<E>, X> done, Func<Func<Input<E>, Iteratee<E, A>>, X> cont) {
-      throw new NotImplementedException("Fold not implemented on Iteratee");
-    }
+    public X Fold<X>(Func<A, Input<E>, X> done, Func<Func<Input<E>, Iteratee<E, A>>, X> cont) => 
+      val.Fold(pair => pair.Fold(done), cont);
 
     public Iteratee<E, C> ZipWith<B, C>(Iteratee<E, B> o, Func<A, Func<B, C>> f) =>
       this.SelectMany(a => o.Select(b => f(a)(b)));
