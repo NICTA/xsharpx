@@ -34,11 +34,7 @@ namespace XSharpx {
       }
     }
 
-    public List<A> ToList {
-      get {
-        return lefts.Reverse * (focus + rights);
-      }
-    }
+    public List<A> ToList => lefts.Reverse * (focus + rights);
 
     public NonEmptyList<A> ToNonEmptyList {
       get {
@@ -47,29 +43,20 @@ namespace XSharpx {
       }
     }
 
-    public ListZipper<B> Select<B>(Func<A, B> f) {
-      return new ListZipper<B>(lefts.Select(f), f(focus), rights.Select(f));
-    }
+    public ListZipper<B> Select<B>(Func<A, B> f) =>
+      new ListZipper<B>(lefts.Select(f), f(focus), rights.Select(f));
 
-    public ListZipper<ListZipper<A>> Duplicate {
-      get {
-        return Extend(q => q);
-      }
-    }
-
+    public ListZipper<ListZipper<A>> Duplicate => Extend(q => q);
     public ListZipper<B> Extend<B>(Func<ListZipper<A>, B> f) {
       var l = this.UnfoldList(z => z.MoveLeft.Select(x => f(x).And(x)));
       var r = this.UnfoldList(z => z.MoveRight.Select(x => f(x).And(x)));
       return new ListZipper<B>(l, f(this), r);
     }
 
-    public ListZipper<A> Update(Func<A, A> f) {
-      return new ListZipper<A>(lefts, f(focus), rights);
-    }
+    public ListZipper<A> Update(Func<A, A> f) =>
+      new ListZipper<A>(lefts, f(focus), rights);
 
-    public ListZipper<A> Set(A a) {
-      return Update(_ => a);
-    }
+    public ListZipper<A> Set(A a) => Update(_ => a);
 
     public Option<ListZipper<A>> MoveLeft {
       get {
@@ -85,13 +72,9 @@ namespace XSharpx {
       }
     }
 
-    public ListZipper<A> MoveLeftOr(Func<ListZipper<A>> z) {
-      return MoveLeft.ValueOr(z);
-    }
+    public ListZipper<A> MoveLeftOr(Func<ListZipper<A>> z) => MoveLeft.ValueOr(z);
 
-    public ListZipper<A> MoveRightOr(Func<ListZipper<A>> z) {
-      return MoveRight.ValueOr(z);
-    }
+    public ListZipper<A> MoveRightOr(Func<ListZipper<A>> z) => MoveRight.ValueOr(z);
 
     public ListZipper<A> TryLeft {
       get {
@@ -107,31 +90,16 @@ namespace XSharpx {
       }
     }
 
-    public ListZipper<A> InsertLeft(A a) {
-      return new ListZipper<A>(lefts, a, focus + rights);
-    }
+    public ListZipper<A> InsertLeft(A a) => new ListZipper<A>(lefts, a, focus + rights);
 
-    public ListZipper<A> InsertRight(A a) {
-      return new ListZipper<A>(focus + lefts, a, rights);
-    }
+    public ListZipper<A> InsertRight(A a) => new ListZipper<A>(focus + lefts, a, rights);
 
-    public ListZipper<A> DeleteOthers {
-      get {
-        return new ListZipper<A>(List<A>.Empty, focus, List<A>.Empty);
-      }
-    }
+    public ListZipper<A> DeleteOthers =>
+      new ListZipper<A>(List<A>.Empty, focus, List<A>.Empty);
 
-    public ListZipper<A> DeleteLefts {
-      get {
-        return new ListZipper<A>(List<A>.Empty, focus, rights);
-      }
-    }
+    public ListZipper<A> DeleteLefts => new ListZipper<A>(List<A>.Empty, focus, rights);
 
-    public ListZipper<A> DeleteRights {
-      get {
-        return new ListZipper<A>(lefts, focus, List<A>.Empty);
-      }
-    }
+    public ListZipper<A> DeleteRights => new ListZipper<A>(lefts, focus, List<A>.Empty);
 
     public Option<ListZipper<A>> DeletePullLeft {
       get {
@@ -147,13 +115,9 @@ namespace XSharpx {
       }
     }
 
-    public ListZipper<A> DeletePullLeftOr(Func<ListZipper<A>> z) {
-      return DeletePullLeft.ValueOr(z);
-    }
+    public ListZipper<A> DeletePullLeftOr(Func<ListZipper<A>> z) => DeletePullLeft.ValueOr(z);
 
-    public ListZipper<A> DeletePullRightOr(Func<ListZipper<A>> z) {
-      return DeletePullRight.ValueOr(z);
-    }
+    public ListZipper<A> DeletePullRightOr(Func<ListZipper<A>> z) => DeletePullRight.ValueOr(z);
 
     public ListZipper<A> TryDeletePullLeft {
       get {
@@ -169,17 +133,9 @@ namespace XSharpx {
       }
     }
 
-    public bool IsStart {
-      get {
-        return lefts.IsEmpty;
-      }
-    }
+    public bool IsStart => lefts.IsEmpty;
 
-    public bool IsEnd {
-      get {
-        return rights.IsEmpty;
-      }
-    }
+    public bool IsEnd => rights.IsEmpty;
 
     public Option<ListZipper<A>> FindLeft(Func<A, bool> p) {
       var z = MoveLeft;
@@ -201,13 +157,11 @@ namespace XSharpx {
       return z;
     }
 
-    public ListZipper<A> FindLeftOr(Func<A, bool> p, Func<ListZipper<A>> z) {
-      return FindLeft(p).ValueOr(z);
-    }
+    public ListZipper<A> FindLeftOr(Func<A, bool> p, Func<ListZipper<A>> z) =>
+      FindLeft(p).ValueOr(z);
 
-    public ListZipper<A> FindRightOr(Func<A, bool> p, Func<ListZipper<A>> z) {
-      return FindRight(p).ValueOr(z);
-    }
+    public ListZipper<A> FindRightOr(Func<A, bool> p, Func<ListZipper<A>> z) =>
+      FindRight(p).ValueOr(z);
 
     public ListZipper<A> TryFindLeft(Func<A, bool> p) {
       var t = this;
@@ -219,21 +173,19 @@ namespace XSharpx {
       return FindRightOr(p, () => t);
     }
 
-    public Option<ListZipper<A>> MoveLeftN(int n) {
-      return n == 0 ?
-               this.Some() :
-               n < 0 ?
-               MoveRightN(Math.Abs(n)) :
-               MoveLeft.SelectMany(z => z.MoveLeftN(n - 1));
-    }
-
-    public Option<ListZipper<A>> MoveRightN(int n) {
-      return n == 0 ?
+    public Option<ListZipper<A>> MoveLeftN(int n) =>
+      n == 0 ?
         this.Some() :
         n < 0 ?
-        MoveLeftN(Math.Abs(n)) :
-        MoveRight.SelectMany(z => z.MoveRightN(n - 1));
-    }
+          MoveRightN(Math.Abs(n)) :
+          MoveLeft.SelectMany(z => z.MoveLeftN(n - 1));
+
+    public Option<ListZipper<A>> MoveRightN(int n) =>
+      n == 0 ?
+        this.Some() :
+        n < 0 ?
+          MoveLeftN(Math.Abs(n)) :
+          MoveRight.SelectMany(z => z.MoveRightN(n - 1));
 
     public ListZipper<A> Start {
       get {
@@ -341,19 +293,16 @@ namespace XSharpx {
         select new ListZipper<B>(ll, xx, rr);
     }
 
-    public static ListZipper<A> operator %(ListZipper<A> z, Func<A, A> f) {
-      return z.Update(f);
-    }
+    public static ListZipper<A> operator %(ListZipper<A> z, Func<A, A> f) => z.Update(f);
+    
   }
 
   public static class ListZipperExtension {
 
-    public static Pair<ListZipper<A>, ListZipper<B>> Unzip<A, B>(this ListZipper<Pair<A, B>> p) {
-      return p.Select(q => q._1.Get).And(p.Select(q => q._2.Get));
-    }
+    public static Pair<ListZipper<A>, ListZipper<B>> Unzip<A, B>(this ListZipper<Pair<A, B>> p) =>
+      p.Select(q => q._1.Get).And(p.Select(q => q._2.Get));
 
-    public static ListZipper<A> ListZipperValue<A>(this A a) {
-      return new ListZipper<A>(List<A>.Empty, a, List<A>.Empty);
-    }
+    public static ListZipper<A> ListZipperValue<A>(this A a) =>
+      new ListZipper<A>(List<A>.Empty, a, List<A>.Empty);
   }
 }

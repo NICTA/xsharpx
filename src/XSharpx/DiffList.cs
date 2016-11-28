@@ -11,71 +11,36 @@ namespace XSharpx {
       this.endo = endo;
     }
 
-    public List<A> Apply(List<A> a) {
-      return endo(a);
-    }
+    public List<A> Apply(List<A> a) => endo(a);
 
-    public List<A> ToList {
-      get {
-        return endo(List<A>.Empty);
-      }
-    }
+    public List<A> ToList => endo(List<A>.Empty);
 
-    public Option<A> Head {
-      get {
-        return ToList.Head;
-      }
-    }
+    public Option<A> Head => ToList.Head;
 
-    public Option<List<A>> Tail {
-      get {
-        return ToList.Tail;
-      }
-    }
+    public Option<List<A>> Tail => ToList.Tail;
 
-    public A HeadOr(Func<A> a) {
-      return Head.ValueOr(a);
-    }
+    public A HeadOr(Func<A> a) => Head.ValueOr(a);
 
-    public List<A> TailOr(Func<List<A>> a) {
-      return Tail.ValueOr(a);
-    }
+    public List<A> TailOr(Func<List<A>> a) =>Tail.ValueOr(a);
 
-    public bool IsEmpty {
-      get {
-        return ToList.IsEmpty;
-      }
-    }
+    public bool IsEmpty => ToList.IsEmpty;
 
-    public bool IsNotEmpty {
-      get {
-        return !IsEmpty;
-      }
-    }
+    public bool IsNotEmpty => !IsEmpty;
 
-    public DiffList<A> Where(Func<A, bool> f) {
-      return ToList.Where(f).ToDiffList;
-    }
+    public DiffList<A> Where(Func<A, bool> f) => ToList.Where(f).ToDiffList;
 
-    public B FoldRight<B>(Func<A, B, B> f, B b) {
-      return ToList.FoldRight(f, b);
-    }
+    public B FoldRight<B>(Func<A, B, B> f, B b) => ToList.FoldRight(f, b);
 
-    public B FoldLeft<B>(Func<B, A, B> f, B b) {
-      return ToList.FoldLeft(f, b);
-    }
+    public B FoldLeft<B>(Func<B, A, B> f, B b) => ToList.FoldLeft(f, b);
 
-    public DiffList<C> ProductWith<B, C>(DiffList<B> o, Func<A, Func<B, C>> f) {
-      return this.SelectMany(a => o.Select(b => f(a)(b)));
-    }
+    public DiffList<C> ProductWith<B, C>(DiffList<B> o, Func<A, Func<B, C>> f) =>
+      this.SelectMany(a => o.Select(b => f(a)(b)));
 
-    public DiffList<Pair<A, B>> Product<B>(DiffList<B> o) {
-      return ProductWith<B, Pair<A, B>>(o, Pair<A, B>.pairF());
-    }
+    public DiffList<Pair<A, B>> Product<B>(DiffList<B> o) =>
+      ProductWith(o, Pair<A, B>.pairF());
 
-    public X Uncons<X>(Func<X> nil, Func<A, DiffList<A>, X> headTail) {
-      return ToList.Uncons(nil, (a, l) => headTail(a, l.ToDiffList));
-    }
+    public X Uncons<X>(Func<X> nil, Func<A, DiffList<A>, X> headTail) =>
+      ToList.Uncons(nil, (a, l) => headTail(a, l.ToDiffList));
 
     public static DiffList<A> diffList(params A[] a) {
       var k = DiffList<A>.Empty;
@@ -87,27 +52,18 @@ namespace XSharpx {
       return k;
     }
 
-    public static DiffList<A> operator +(A h, DiffList<A> t) {
-      return new DiffList<A>(l => h + t.endo(l));
-    }
+    public static DiffList<A> operator +(A h, DiffList<A> t) =>
+      new DiffList<A>(l => h + t.endo(l));
 
-    public static DiffList<A> operator +(DiffList<A> t, A r) {
-      return new DiffList<A>(l => t.endo(r + l));
-    }
+    public static DiffList<A> operator +(DiffList<A> t, A r) =>
+      new DiffList<A>(l => t.endo(r + l));
 
-    public static DiffList<A> operator *(DiffList<A> x, DiffList<A> y) {
-      return new DiffList<A>(l => x.endo(y.endo(l)));
-    }
+    public static DiffList<A> operator *(DiffList<A> x, DiffList<A> y) =>
+      new DiffList<A>(l => x.endo(y.endo(l)));
 
-    public static DiffList<A> diffList(Func<List<A>, List<A>> e) {
-      return new DiffList<A>(e);
-    }
+    public static DiffList<A> diffList(Func<List<A>, List<A>> e) => new DiffList<A>(e);
 
-    public static DiffList<A> Empty {
-      get {
-        return new DiffList<A>(l => l);
-      }
-    }
+    public static DiffList<A> Empty => new DiffList<A>(l => l);
 
     private class DiffListEnumerator : IEnumerator<A> {
       private readonly IEnumerator<A> e;
@@ -122,66 +78,43 @@ namespace XSharpx {
         e.Reset();
       }
 
-      public bool MoveNext() {
-        return e.MoveNext();
-      }
+      public bool MoveNext() => e.MoveNext();
 
-      A IEnumerator<A>.Current {
-        get {
-          return e.Current;
-        }
-      }
-
-      public object Current {
-        get {
-          return e.Current;
-        }
-      }
+      A IEnumerator<A>.Current => e.Current;
+      public object Current => e.Current;
     }
 
-    private DiffListEnumerator Enumerate() {
-      return new DiffListEnumerator((ToList as IEnumerable<A>).GetEnumerator());
-    }
+    private DiffListEnumerator Enumerate() => new DiffListEnumerator((ToList as IEnumerable<A>).GetEnumerator());
 
-    IEnumerator<A> IEnumerable<A>.GetEnumerator() {
-      return Enumerate();
-    }
+    IEnumerator<A> IEnumerable<A>.GetEnumerator() => Enumerate();
 
-    IEnumerator IEnumerable.GetEnumerator() {
-      return Enumerate();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => Enumerate();
   }
 
   public static class DiffListExtension {
-    public static DiffList<B> Select<A, B>(this DiffList<A> ps, Func<A, B> f) {
-      return ps.FoldRight((a, b) => f(a) + b, DiffList<B>.Empty);
-    }
+    public static DiffList<B> Select<A, B>(this DiffList<A> ps, Func<A, B> f) =>
+      ps.FoldRight((a, b) => f(a) + b, DiffList<B>.Empty);
 
-    public static DiffList<B> SelectMany<A, B>(this DiffList<A> ps, Func<A, DiffList<B>> f) {
-       return ps.FoldRight((a, b) => f(a) * b, DiffList<B>.Empty);
-    }
+    public static DiffList<B> SelectMany<A, B>(this DiffList<A> ps, Func<A, DiffList<B>> f) =>
+       ps.FoldRight((a, b) => f(a) * b, DiffList<B>.Empty);
 
-    public static DiffList<C> SelectMany<A, B, C>(this DiffList<A> ps, Func<A, DiffList<B>> p, Func<A, B, C> f) {
-      return SelectMany(ps, a => Select(p(a), b => f(a, b)));
-    }
+    public static DiffList<C> SelectMany<A, B, C>(this DiffList<A> ps, Func<A, DiffList<B>> p, Func<A, B, C> f) =>
+      SelectMany(ps, a => Select(p(a), b => f(a, b)));
+    
 
-    public static DiffList<B> Apply<A, B>(this DiffList<Func<A, B>> f, DiffList<A> o) {
-      return f.ProductWith<A, B>(o, a => b => a(b));
-    }
+    public static DiffList<B> Apply<A, B>(this DiffList<Func<A, B>> f, DiffList<A> o) =>
+      f.ProductWith<A, B>(o, a => b => a(b));
 
-    public static DiffList<A> Flatten<A>(this DiffList<DiffList<A>> o) {
-      return o.SelectMany(z => z);
-    }
+    public static DiffList<A> Flatten<A>(this DiffList<DiffList<A>> o) =>
+       o.SelectMany(z => z);
 
-    public static Pair<DiffList<A>, DiffList<B>> Unzip<A, B>(this DiffList<Pair<A, B>> p) {
-      return p.FoldRight<Pair<DiffList<A>, DiffList<B>>>(
+    public static Pair<DiffList<A>, DiffList<B>> Unzip<A, B>(this DiffList<Pair<A, B>> p) =>
+      p.FoldRight(
         (x, y) => (x._1.Get + y._1.Get).And(x._2.Get + y._2.Get)
       , DiffList<A>.Empty.And(DiffList<B>.Empty)
       );
-    }
 
-    public static DiffList<A> DiffListValue<A>(this A a) {
-      return DiffList<A>.diffList(l => a + l);
-    }
+    public static DiffList<A> DiffListValue<A>(this A a) =>
+      DiffList<A>.diffList(l => a + l);
   }
 }
